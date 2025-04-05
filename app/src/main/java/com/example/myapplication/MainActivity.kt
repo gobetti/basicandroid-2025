@@ -15,8 +15,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.cash.sqldelight.coroutines.asFlow
+import app.cash.sqldelight.coroutines.mapToList
 import app.cash.sqldelight.driver.android.AndroidSqliteDriver
 import com.example.myapplication.ui.theme.MyApplicationTheme
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.UUID
 
@@ -49,7 +53,15 @@ fun App() {
                     }
                 }) { Text("Insert") }
 
-                database.myTableQueries.findAll().executeAsList().forEach { text ->
+                val foo = database
+                    .myTableQueries
+                    .findAll()
+                    .asFlow()
+                    .mapToList(Dispatchers.IO)
+                    .collectAsStateWithLifecycle(initialValue = emptyList())
+                    .value
+
+                foo.forEach { text ->
                     Greeting(
                         name = text
                     )
