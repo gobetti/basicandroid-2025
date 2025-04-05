@@ -1,0 +1,9 @@
+CREATE TABLE MyTable(
+  id TEXT PRIMARY KEY NOT NULL
+);
+
+insert:
+INSERT INTO MyTable VALUES ?;
+
+findAll:
+SELECT * FROM MyTable;
