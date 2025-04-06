@@ -19,14 +19,16 @@ fun HomeRoute(
     val entries by viewModel.myTableEntries.collectAsStateWithLifecycle()
     HomeView(
         onButtonClick = viewModel::onButtonClick,
-        entries = entries
+        entries = entries,
+        counter = viewModel.counter
     )
 }
 
 @Composable
 private fun HomeView(
     onButtonClick: () -> Unit,
-    entries: List<String>
+    entries: List<String>,
+    counter: Int
 ) {
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         Column(
@@ -35,6 +37,8 @@ private fun HomeView(
             Button(onClick = onButtonClick) {
                 Text("Insert")
             }
+
+            Text("Counter: $counter")
 
             entries.forEach { text ->
                 Text(text)
@@ -48,6 +52,7 @@ private fun HomeView(
 private fun HomePreview() {
     HomeView(
         onButtonClick = {},
-        entries = listOf("Entry 1", "Entry 2")
+        entries = listOf("Entry 1", "Entry 2"),
+        counter = 1
     )
 }

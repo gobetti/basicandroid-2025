@@ -1,5 +1,8 @@
 package com.example.myapplication.feature.home
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.cash.sqldelight.coroutines.asFlow
@@ -30,12 +33,19 @@ class HomeViewModel(
         initialValue = emptyList()
     )
 
-    fun onButtonClick() = viewModelScope.launch {
-        withContext(Dispatchers.IO) {
-            database.transaction {
-                database.myTableQueries.insert(
-                    MyTable(UUID.randomUUID().toString())
-                )
+    var counter by mutableIntStateOf(0)
+        private set
+
+    fun onButtonClick() {
+        counter += 1
+
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                database.transaction {
+                    database.myTableQueries.insert(
+                        MyTable(UUID.randomUUID().toString())
+                    )
+                }
             }
         }
     }
