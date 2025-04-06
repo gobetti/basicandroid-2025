@@ -13,6 +13,7 @@ import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import com.example.myapplication.Database
 import com.example.myapplication.MyTable
+import com.example.myapplication.di.SettingsDataStore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
@@ -26,7 +27,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val database: Database,
-    private val settings: DataStore<Preferences>
+    @SettingsDataStore private val settings: DataStore<Preferences>
 ) : ViewModel() {
     private val myTableFlow =
         database
