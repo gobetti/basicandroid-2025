@@ -18,10 +18,12 @@ fun HomeRoute(
     viewModel: HomeViewModel = viewModel()
 ) {
     val entries by viewModel.myTableEntries.collectAsStateWithLifecycle()
+    val allTimeCounter by viewModel.allTimeCounter.collectAsStateWithLifecycle()
     HomeView(
         onButtonClick = viewModel::insert,
         onClearClick = viewModel::clear,
         entries = entries,
+        allTimeCounter = allTimeCounter,
         counter = viewModel.counter
     )
 }
@@ -31,6 +33,7 @@ private fun HomeView(
     onButtonClick: () -> Unit,
     onClearClick: () -> Unit,
     entries: List<String>,
+    allTimeCounter: Int,
     counter: Int
 ) {
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
@@ -41,7 +44,9 @@ private fun HomeView(
                 Text("Insert")
             }
 
-            Text("Counter: $counter")
+            Text("All time counter: $allTimeCounter")
+
+            Text("This session's counter: $counter")
 
             Button(onClick = onClearClick) {
                 Text("Clear")
@@ -61,6 +66,7 @@ private fun HomePreview() {
         onButtonClick = {},
         onClearClick = {},
         entries = listOf("Entry 1", "Entry 2"),
-        counter = 1
+        allTimeCounter = 1,
+        counter = 0
     )
 }
