@@ -7,3 +7,6 @@ INSERT INTO MyTable VALUES ?;
 
 findAll:
 SELECT * FROM MyTable;
+
+deleteAll:
+DELETE FROM MyTable;

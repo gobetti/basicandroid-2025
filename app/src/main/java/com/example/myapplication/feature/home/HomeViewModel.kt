@@ -36,7 +36,7 @@ class HomeViewModel(
     var counter by mutableIntStateOf(0)
         private set
 
-    fun onButtonClick() {
+    fun insert() {
         counter += 1
 
         viewModelScope.launch {
@@ -45,6 +45,16 @@ class HomeViewModel(
                     database.myTableQueries.insert(
                         MyTable(UUID.randomUUID().toString())
                     )
+                }
+            }
+        }
+    }
+
+    fun clear() {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                database.transaction {
+                    database.myTableQueries.deleteAll()
                 }
             }
         }

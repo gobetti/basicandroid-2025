@@ -19,7 +19,8 @@ fun HomeRoute(
 ) {
     val entries by viewModel.myTableEntries.collectAsStateWithLifecycle()
     HomeView(
-        onButtonClick = viewModel::onButtonClick,
+        onButtonClick = viewModel::insert,
+        onClearClick = viewModel::clear,
         entries = entries,
         counter = viewModel.counter
     )
@@ -28,6 +29,7 @@ fun HomeRoute(
 @Composable
 private fun HomeView(
     onButtonClick: () -> Unit,
+    onClearClick: () -> Unit,
     entries: List<String>,
     counter: Int
 ) {
@@ -41,6 +43,10 @@ private fun HomeView(
 
             Text("Counter: $counter")
 
+            Button(onClick = onClearClick) {
+                Text("Clear")
+            }
+
             entries.forEach { text ->
                 Text(text)
             }
@@ -53,6 +59,7 @@ private fun HomeView(
 private fun HomePreview() {
     HomeView(
         onButtonClick = {},
+        onClearClick = {},
         entries = listOf("Entry 1", "Entry 2"),
         counter = 1
     )
