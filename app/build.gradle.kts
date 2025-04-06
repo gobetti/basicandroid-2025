@@ -27,7 +27,11 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testOptions {
+            unitTests {
+                isIncludeAndroidResources = true
+            }
+        }
     }
 
     buildTypes {
@@ -72,11 +76,9 @@ dependencies {
     implementation(libs.sqldelight)
     implementation(libs.sqldelight.coroutines)
 
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
+    testImplementation(libs.test.compose.junit4)
+    testImplementation(libs.test.hilt)
+    testImplementation(libs.test.robolectric)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 }
