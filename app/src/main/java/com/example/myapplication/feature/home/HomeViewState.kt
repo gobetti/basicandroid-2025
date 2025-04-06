@@ -5,6 +5,7 @@ import com.example.myapplication.data.Product
 
 @Immutable
 data class HomeViewState(
+    val isLoading: Boolean,
     val barcode: String,
     val searchResult: Product?,
     val entries: List<String>,

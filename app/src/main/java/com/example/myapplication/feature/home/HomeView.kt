@@ -1,18 +1,19 @@
 package com.example.myapplication.feature.home
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material3.Button
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapplication.data.Product
 
@@ -20,11 +21,11 @@ import com.example.myapplication.data.Product
 fun HomeRoute(
     viewModel: HomeViewModel = viewModel()
 ) {
-    val state by viewModel.viewState.collectAsStateWithLifecycle()
+    val state = viewModel.viewState()
     HomeView(
         onAction = { action ->
             when(action) {
-                is HomeAction.BarcodeChange -> viewModel.onBarcodeChange(action.barcode)
+                is HomeAction.BarcodeChange -> viewModel.barcodeSource.onBarcodeChange(action.barcode)
                 HomeAction.Clear -> viewModel.clear()
                 HomeAction.Insert -> viewModel.insert()
                 HomeAction.Search -> viewModel.search()
@@ -40,24 +41,32 @@ private fun HomeView(
     state: HomeViewState
 ) {
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-        LazyColumn(
+        Column(
             modifier = Modifier.padding(innerPadding)
         ) {
-            foodsItem(
-                barcode = state.barcode,
-                onBarcodeChange = { onAction(HomeAction.BarcodeChange(it)) },
-                onSearchClick = { onAction(HomeAction.Search) },
-                searchResult = state.searchResult
-            )
+            if (state.isLoading) {
+                LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+            }
 
-            controlsItem(
-                onButtonClick = { onAction(HomeAction.Insert) },
-                onClearClick = { onAction(HomeAction.Clear) },
-                allTimeCounter = state.allTimeCounter,
-                counter = state.counter
-            )
+            LazyColumn(
+                modifier = Modifier.padding(innerPadding)
+            ) {
+                foodsItem(
+                    barcode = state.barcode,
+                    onBarcodeChange = { onAction(HomeAction.BarcodeChange(it)) },
+                    onSearchClick = { onAction(HomeAction.Search) },
+                    searchResult = state.searchResult
+                )
 
-            databaseItems(items = state.entries)
+                controlsItem(
+                    onButtonClick = { onAction(HomeAction.Insert) },
+                    onClearClick = { onAction(HomeAction.Clear) },
+                    allTimeCounter = state.allTimeCounter,
+                    counter = state.counter
+                )
+
+                databaseItems(items = state.entries)
+            }
         }
     }
 }
@@ -127,6 +136,7 @@ private fun HomePreview() {
     HomeView(
         onAction = {},
         state = HomeViewState(
+            isLoading = false,
             barcode = "034270",
             searchResult = Product(code = "3824905"),
             entries = listOf("Entry 1", "Entry 2"),
