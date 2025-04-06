@@ -7,19 +7,20 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
-import com.example.myapplication.DI
-import com.example.myapplication.DI.database
 import com.example.myapplication.Database
 import com.example.myapplication.MyTable
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.UUID
+import javax.inject.Inject
 
-class HomeViewModel(
-    database: Database = DI.database
+@HiltViewModel
+class HomeViewModel @Inject constructor(
+    private val database: Database
 ) : ViewModel() {
     private val myTableFlow =
         database
