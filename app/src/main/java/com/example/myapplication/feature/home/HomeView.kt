@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,6 +21,10 @@ fun HomeRoute(
     val entries by viewModel.myTableEntries.collectAsStateWithLifecycle()
     val allTimeCounter by viewModel.allTimeCounter.collectAsStateWithLifecycle()
     HomeView(
+        barcode = viewModel.barcode,
+        onBarcodeChange = viewModel::onBarcodeChange,
+        onSearchClick = viewModel::search,
+        searchResult = viewModel.searchResult,
         onButtonClick = viewModel::insert,
         onClearClick = viewModel::clear,
         entries = entries,
@@ -30,6 +35,10 @@ fun HomeRoute(
 
 @Composable
 private fun HomeView(
+    barcode: String,
+    onBarcodeChange: (String) -> Unit,
+    onSearchClick: () -> Unit,
+    searchResult: String?,
     onButtonClick: () -> Unit,
     onClearClick: () -> Unit,
     entries: List<String>,
@@ -40,6 +49,19 @@ private fun HomeView(
         Column(
             modifier = Modifier.padding(innerPadding)
         ) {
+            OutlinedTextField(
+                value = barcode,
+                onValueChange = onBarcodeChange
+            )
+
+            Button(onClick = onSearchClick) {
+                Text("Search")
+            }
+
+            searchResult?.let { searchResult ->
+                Text(searchResult)
+            }
+
             Button(onClick = onButtonClick) {
                 Text("Insert")
             }
@@ -63,6 +85,10 @@ private fun HomeView(
 @Composable
 private fun HomePreview() {
     HomeView(
+        barcode = "034270",
+        onBarcodeChange = {},
+        onSearchClick = {},
+        searchResult = "3824905",
         onButtonClick = {},
         onClearClick = {},
         entries = listOf("Entry 1", "Entry 2"),

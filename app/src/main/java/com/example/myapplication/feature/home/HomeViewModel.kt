@@ -2,6 +2,7 @@ package com.example.myapplication.feature.home
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -15,6 +16,9 @@ import com.example.myapplication.Database
 import com.example.myapplication.MyTable
 import com.example.myapplication.di.SettingsDataStore
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.ktor.client.HttpClient
+import io.ktor.client.request.get
+import io.ktor.client.statement.bodyAsText
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
@@ -27,8 +31,26 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val database: Database,
+    private val httpClient: HttpClient,
     @SettingsDataStore private val settings: DataStore<Preferences>
 ) : ViewModel() {
+    var barcode by mutableStateOf("0030000436073")
+        private set
+
+    fun onBarcodeChange(text: String) {
+        barcode = text.take(13)
+    }
+
+    var searchResult by mutableStateOf<String?>(null)
+        private set
+
+    fun search() {
+        viewModelScope.launch {
+            val response = httpClient.get("https://world.openfoodfacts.org/api/v2/product/$barcode.json")
+            searchResult = response.bodyAsText()
+        }
+    }
+
     private val myTableFlow =
         database
             .myTableQueries

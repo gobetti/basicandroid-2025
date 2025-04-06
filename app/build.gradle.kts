@@ -64,6 +64,8 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.hilt)
     ksp(libs.hilt.compiler)
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.okhttp)
     implementation(libs.sqldelight)
     implementation(libs.sqldelight.coroutines)
 
