@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.myapplication.data.Product
 
 @Composable
 fun HomeRoute(
@@ -65,7 +66,7 @@ private fun LazyListScope.foodsItem(
     barcode: String,
     onBarcodeChange: (String) -> Unit,
     onSearchClick: () -> Unit,
-    searchResult: String?,
+    searchResult: Product?
 ) {
     item(
         key = "Foods",
@@ -81,7 +82,7 @@ private fun LazyListScope.foodsItem(
         }
 
         searchResult?.let { searchResult ->
-            Text(searchResult)
+            Text(searchResult.code)
         }
     }
 }
@@ -127,7 +128,7 @@ private fun HomePreview() {
         onAction = {},
         state = HomeViewState(
             barcode = "034270",
-            searchResult = "3824905",
+            searchResult = Product(code = "3824905"),
             entries = listOf("Entry 1", "Entry 2"),
             allTimeCounter = 1,
             counter = 0

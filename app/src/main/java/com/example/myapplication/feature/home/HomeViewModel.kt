@@ -10,11 +10,12 @@ import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import com.example.myapplication.Database
 import com.example.myapplication.MyTable
+import com.example.myapplication.data.Product
 import com.example.myapplication.di.SettingsDataStore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.ktor.client.HttpClient
+import io.ktor.client.call.body
 import io.ktor.client.request.get
-import io.ktor.client.statement.bodyAsText
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -33,7 +34,7 @@ class HomeViewModel @Inject constructor(
     @SettingsDataStore private val settings: DataStore<Preferences>
 ) : ViewModel() {
     private val barcode = MutableStateFlow("0030000436073")
-    private val searchResult = MutableStateFlow<String?>(null)
+    private val searchResult = MutableStateFlow<Product?>(null)
     private val counter = MutableStateFlow(0)
 
     private val entriesFlow =
@@ -81,7 +82,7 @@ class HomeViewModel @Inject constructor(
     fun search() {
         viewModelScope.launch {
             val response = httpClient.get("https://world.openfoodfacts.org/api/v2/product/$barcode.json")
-            searchResult.value = response.bodyAsText()
+            searchResult.value = response.body()
         }
     }
 
