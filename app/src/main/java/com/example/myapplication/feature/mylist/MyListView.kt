@@ -9,7 +9,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -17,7 +17,7 @@ data object MyList
 
 @Composable
 fun MyListRoute(
-    viewModel: MyListViewModel = viewModel()
+    viewModel: MyListViewModel = hiltViewModel()
 ) {
     MyListView(
         onInsert = viewModel::insert,
