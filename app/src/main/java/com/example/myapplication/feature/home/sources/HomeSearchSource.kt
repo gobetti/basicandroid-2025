@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import com.example.myapplication.data.Product
+import com.example.myapplication.data.ProductData
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -14,7 +14,7 @@ class HomeSearchSource @Inject constructor(
     private val barcodeSource: HomeBarcodeSource,
     private val httpClient: HttpClient
 ) {
-    private var result by mutableStateOf<Product?>(null)
+    private var result by mutableStateOf<ProductData?>(null)
     private var isLoading by mutableStateOf(false)
 
     @Composable

@@ -1,5 +1,6 @@
 package com.example.myapplication.feature.home
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
@@ -7,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -14,11 +16,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.myapplication.data.Product
+import com.example.myapplication.data.ProductData
+import kotlinx.serialization.json.JsonObject
 
 @Composable
 fun HomeRoute(
     onGoToListClick: () -> Unit,
+    onSearchResultClick: (ProductData) -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val state = viewModel.viewState()
@@ -30,6 +34,7 @@ fun HomeRoute(
                     viewModel.count()
                     onGoToListClick()
                 }
+                is HomeAction.OpenProduct -> onSearchResultClick(action.product)
                 HomeAction.Reset -> viewModel.reset()
                 HomeAction.Search -> viewModel.search()
             }
@@ -55,6 +60,7 @@ private fun HomeView(
                 barcode = state.barcode,
                 onBarcodeChange = { onAction(HomeAction.BarcodeChange(it)) },
                 onSearchClick = { onAction(HomeAction.Search) },
+                onSearchResultClick = { onAction(HomeAction.OpenProduct(it)) },
                 searchResult = state.searchResult
             )
 
@@ -73,7 +79,8 @@ private fun ColumnScope.Foods(
     barcode: String,
     onBarcodeChange: (String) -> Unit,
     onSearchClick: () -> Unit,
-    searchResult: Product?
+    onSearchResultClick: (ProductData) -> Unit,
+    searchResult: ProductData?
 ) {
     OutlinedTextField(
         value = barcode,
@@ -84,8 +91,15 @@ private fun ColumnScope.Foods(
         Text("Search")
     }
 
-    searchResult?.let { searchResult ->
-        Text(searchResult.code)
+    if(searchResult != null) {
+        ListItem(
+            headlineContent = {
+                Text(searchResult.code)
+            },
+            modifier = Modifier.clickable {
+                onSearchResultClick(searchResult)
+            }
+        )
     }
 }
 
@@ -119,7 +133,10 @@ private fun HomePreview() {
         state = HomeViewState(
             isLoading = false,
             barcode = "034270",
-            searchResult = Product(code = "3824905"),
+            searchResult = ProductData(
+                code = "3824905",
+                productJson = JsonObject(emptyMap())
+            ),
             allTimeCounter = 1,
             counter = 0
         )

@@ -8,6 +8,8 @@ import com.example.myapplication.feature.home.Home
 import com.example.myapplication.feature.home.homeScreen
 import com.example.myapplication.feature.mylist.myListScreen
 import com.example.myapplication.feature.mylist.navigateToMyList
+import com.example.myapplication.feature.product.navigateToProduct
+import com.example.myapplication.feature.product.productScreen
 import com.example.myapplication.ui.theme.MyApplicationTheme
 
 @Composable
@@ -19,11 +21,16 @@ fun App() {
             startDestination = Home
         ) {
             homeScreen(
-                onGoToListClick = { navController.navigateToMyList() }
+                onGoToListClick = navController::navigateToMyList,
+                onSearchResultClick = navController::navigateToProduct
             )
 
             myListScreen(
-                onBackClick = { navController.popBackStack() }
+                onBackClick = navController::popBackStack
+            )
+
+            productScreen(
+                onBackClick = navController::popBackStack
             )
         }
     }
