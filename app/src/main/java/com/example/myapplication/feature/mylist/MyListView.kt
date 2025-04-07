@@ -16,10 +16,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import kotlinx.serialization.Serializable
-
-@Serializable
-data object MyList
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -3,12 +3,11 @@ package com.example.myapplication
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.myapplication.feature.home.Home
-import com.example.myapplication.feature.home.HomeRoute
-import com.example.myapplication.feature.mylist.MyList
-import com.example.myapplication.feature.mylist.MyListRoute
+import com.example.myapplication.feature.home.homeScreen
+import com.example.myapplication.feature.mylist.myListScreen
+import com.example.myapplication.feature.mylist.navigateToMyList
 import com.example.myapplication.ui.theme.MyApplicationTheme
 
 @Composable
@@ -19,17 +18,13 @@ fun App() {
             navController = navController,
             startDestination = Home
         ) {
-            composable<Home> {
-                HomeRoute(
-                    onGoToListClick = { navController.navigate(MyList) }
-                )
-            }
+            homeScreen(
+                onGoToListClick = { navController.navigateToMyList() }
+            )
 
-            composable<MyList> {
-                MyListRoute(
-                    onBackClick = { navController.popBackStack() }
-                )
-            }
+            myListScreen(
+                onBackClick = { navController.popBackStack() }
+            )
         }
     }
 }
