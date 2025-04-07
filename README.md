@@ -1,0 +1,9 @@
+A basic Android app inspired by the [Now In Android](https://github.com/android/nowinandroid) app, set up step by step with:
+
+- UI: Jetpack Compose
+- DI: Hilt (with KSP, not kapt)
+- Navigation: navigation-compose
+- Network: Ktor
+- Persistence: DataStore and SqlDelight (with coroutines)
+- Serialization: Kotlin Serialization
+- Tests: Robolectric
