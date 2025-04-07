@@ -1,0 +1,6 @@
+DROP TABLE MyTable;
+
+CREATE TABLE Product(
+  barcode TEXT PRIMARY KEY NOT NULL,
+  productJson TEXT AS JsonObject NOT NULL
+);

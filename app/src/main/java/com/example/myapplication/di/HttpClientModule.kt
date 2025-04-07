@@ -13,13 +13,9 @@ import kotlinx.serialization.json.Json
 @InstallIn(SingletonComponent::class)
 object HttpClientModule {
     @Provides
-    fun provideHttpClient(): HttpClient = HttpClient {
+    fun provideHttpClient(json: Json): HttpClient = HttpClient {
         install(ContentNegotiation) {
-            json(
-                json = Json {
-                    ignoreUnknownKeys = true
-                }
-            )
+            json(json)
         }
     }
 }

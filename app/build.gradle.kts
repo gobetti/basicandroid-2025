@@ -12,6 +12,7 @@ sqldelight {
     databases {
         create("Database") {
             packageName.set("com.example.myapplication")
+            dialect("app.cash.sqldelight:sqlite-3-38-dialect:${libs.versions.sqldelight.get()}")
         }
     }
 }
