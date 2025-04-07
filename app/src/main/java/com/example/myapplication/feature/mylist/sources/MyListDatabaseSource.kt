@@ -1,4 +1,4 @@
-package com.example.myapplication.feature.home.sources
+package com.example.myapplication.feature.mylist.sources
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -12,7 +12,7 @@ import kotlinx.coroutines.withContext
 import java.util.UUID
 import javax.inject.Inject
 
-class HomeDatabaseSource @Inject constructor(
+class MyListDatabaseSource @Inject constructor(
     private val database: Database
 ) {
     private val flow =

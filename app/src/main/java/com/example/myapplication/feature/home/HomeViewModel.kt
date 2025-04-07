@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.feature.home.sources.HomeBarcodeSource
-import com.example.myapplication.feature.home.sources.HomeDatabaseSource
 import com.example.myapplication.feature.home.sources.HomePersistentCounterSource
 import com.example.myapplication.feature.home.sources.HomeSearchSource
 import com.example.myapplication.feature.home.sources.HomeTransientCounterSource
@@ -15,7 +14,6 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     val barcodeSource: HomeBarcodeSource,
-    val databaseSource: HomeDatabaseSource,
     val persistentCounterSource: HomePersistentCounterSource,
     val searchSource: HomeSearchSource,
     val transientCounterSource: HomeTransientCounterSource
@@ -25,7 +23,6 @@ class HomeViewModel @Inject constructor(
         isLoading = searchSource.isLoading(),
         barcode = barcodeSource.currentState(),
         searchResult = searchSource.currentState(),
-        entries = databaseSource.currentState(),
         allTimeCounter = persistentCounterSource.currentState(),
         counter = transientCounterSource.currentState()
     )
@@ -36,27 +33,19 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun insert() {
+    fun count() {
         transientCounterSource.increment()
 
         viewModelScope.launch {
             persistentCounterSource.increment()
         }
-
-        viewModelScope.launch {
-            databaseSource.insert()
-        }
     }
 
-    fun clear() {
+    fun reset() {
         transientCounterSource.reset()
 
         viewModelScope.launch {
             persistentCounterSource.reset()
-        }
-
-        viewModelScope.launch {
-            databaseSource.deleteAll()
         }
     }
 }

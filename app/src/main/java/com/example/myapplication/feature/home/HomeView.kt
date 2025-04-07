@@ -1,11 +1,10 @@
 package com.example.myapplication.feature.home
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material3.Button
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.OutlinedTextField
@@ -16,9 +15,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapplication.data.Product
+import kotlinx.serialization.Serializable
+
+@Serializable
+data object Home
 
 @Composable
 fun HomeRoute(
+    onGoToListClick: () -> Unit,
     viewModel: HomeViewModel = viewModel()
 ) {
     val state = viewModel.viewState()
@@ -26,8 +30,11 @@ fun HomeRoute(
         onAction = { action ->
             when(action) {
                 is HomeAction.BarcodeChange -> viewModel.barcodeSource.onBarcodeChange(action.barcode)
-                HomeAction.Clear -> viewModel.clear()
-                HomeAction.Insert -> viewModel.insert()
+                HomeAction.OpenList -> {
+                    viewModel.count()
+                    onGoToListClick()
+                }
+                HomeAction.Reset -> viewModel.reset()
                 HomeAction.Search -> viewModel.search()
             }
         },
@@ -48,86 +55,64 @@ private fun HomeView(
                 LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
             }
 
-            LazyColumn(
-                modifier = Modifier.padding(innerPadding)
-            ) {
-                foodsItem(
-                    barcode = state.barcode,
-                    onBarcodeChange = { onAction(HomeAction.BarcodeChange(it)) },
-                    onSearchClick = { onAction(HomeAction.Search) },
-                    searchResult = state.searchResult
-                )
+            Foods(
+                barcode = state.barcode,
+                onBarcodeChange = { onAction(HomeAction.BarcodeChange(it)) },
+                onSearchClick = { onAction(HomeAction.Search) },
+                searchResult = state.searchResult
+            )
 
-                controlsItem(
-                    onButtonClick = { onAction(HomeAction.Insert) },
-                    onClearClick = { onAction(HomeAction.Clear) },
-                    allTimeCounter = state.allTimeCounter,
-                    counter = state.counter
-                )
-
-                databaseItems(items = state.entries)
-            }
+            Controls(
+                onButtonClick = { onAction(HomeAction.OpenList) },
+                onResetClick = { onAction(HomeAction.Reset) },
+                allTimeCounter = state.allTimeCounter,
+                counter = state.counter
+            )
         }
     }
 }
 
-private fun LazyListScope.foodsItem(
+@Composable
+private fun ColumnScope.Foods(
     barcode: String,
     onBarcodeChange: (String) -> Unit,
     onSearchClick: () -> Unit,
     searchResult: Product?
 ) {
-    item(
-        key = "Foods",
-        contentType = "Foods"
-    ) {
-        OutlinedTextField(
-            value = barcode,
-            onValueChange = onBarcodeChange
-        )
+    OutlinedTextField(
+        value = barcode,
+        onValueChange = onBarcodeChange
+    )
 
-        Button(onClick = onSearchClick) {
-            Text("Search")
-        }
+    Button(onClick = onSearchClick) {
+        Text("Search")
+    }
 
-        searchResult?.let { searchResult ->
-            Text(searchResult.code)
-        }
+    searchResult?.let { searchResult ->
+        Text(searchResult.code)
     }
 }
 
-private fun LazyListScope.controlsItem(
+@Composable
+private fun ColumnScope.Controls(
     onButtonClick: () -> Unit,
-    onClearClick: () -> Unit,
+    onResetClick: () -> Unit,
     allTimeCounter: Int,
     counter: Int
 ) {
-    item(
-        key = "Controls",
-        contentType = "Controls"
+    Button(
+        onClick = onButtonClick
     ) {
-        Button(onClick = onButtonClick) {
-            Text("Insert")
-        }
-
-        Text("All time counter: $allTimeCounter")
-
-        Text("This session's counter: $counter")
-
-        Button(onClick = onClearClick) {
-            Text("Clear")
-        }
+        Text("Go to List")
     }
-}
 
-private fun LazyListScope.databaseItems(items: List<String>) {
-    items(
-        count = items.size,
-        key = { index -> items[index] },
-        contentType = { "DatabaseItem" }
-    ) { index ->
-        Text(items[index])
+    Button(onClick = onResetClick) {
+        Text("Reset")
     }
+
+    Text("All time counter: $allTimeCounter")
+
+    Text("This session's counter: $counter")
 }
 
 @Preview
@@ -139,7 +124,6 @@ private fun HomePreview() {
             isLoading = false,
             barcode = "034270",
             searchResult = Product(code = "3824905"),
-            entries = listOf("Entry 1", "Entry 2"),
             allTimeCounter = 1,
             counter = 0
         )

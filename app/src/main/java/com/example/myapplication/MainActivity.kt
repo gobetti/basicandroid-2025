@@ -4,9 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.runtime.Composable
-import com.example.myapplication.feature.home.HomeRoute
-import com.example.myapplication.ui.theme.MyApplicationTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -19,16 +16,3 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
-@Composable
-fun App() {
-    MyApplicationTheme {
-        HomeRoute()
-    }
-}
-
-//@Preview(showBackground = true)
-//@Composable
-//fun AppPreview() {
-//    App()
-//}

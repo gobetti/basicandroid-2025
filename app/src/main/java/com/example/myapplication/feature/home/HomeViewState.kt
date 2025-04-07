@@ -8,7 +8,6 @@ data class HomeViewState(
     val isLoading: Boolean,
     val barcode: String,
     val searchResult: Product?,
-    val entries: List<String>,
     val allTimeCounter: Int,
     val counter: Int
 )
