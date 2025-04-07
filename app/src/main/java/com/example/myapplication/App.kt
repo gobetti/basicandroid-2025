@@ -26,7 +26,9 @@ fun App() {
             }
 
             composable<MyList> {
-                MyListRoute()
+                MyListRoute(
+                    onBackClick = { navController.popBackStack() }
+                )
             }
         }
     }
