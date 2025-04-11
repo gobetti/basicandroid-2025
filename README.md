@@ -7,3 +7,4 @@ A basic Android app inspired by the [Now In Android](https://github.com/android/
 - Persistence: DataStore and SqlDelight (with coroutines)
 - Serialization: Kotlin Serialization
 - Tests: Robolectric
+- Modularization using conventions in `buildSrc`. TODO: Migrate to `build-logic`

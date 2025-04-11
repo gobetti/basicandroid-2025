@@ -19,5 +19,13 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "My Application"
+rootProject.name = "MyApplication"
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+
 include(":app")
+include(":core:data")
+include(":core:network")
+include(":core:ui")
+include(":feature:home")
+include(":feature:mylist")
+include(":feature:product")
