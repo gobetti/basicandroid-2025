@@ -1,8 +1,9 @@
 package com.example.myapplication.feature.home
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -46,38 +47,84 @@ private fun HomeView(
     counter: Int
 ) {
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-        Column(
+        LazyColumn(
             modifier = Modifier.padding(innerPadding)
         ) {
-            OutlinedTextField(
-                value = barcode,
-                onValueChange = onBarcodeChange
+            foodsItem(
+                barcode = barcode,
+                onBarcodeChange = onBarcodeChange,
+                onSearchClick = onSearchClick,
+                searchResult = searchResult
             )
 
-            Button(onClick = onSearchClick) {
-                Text("Search")
-            }
+            controlsItem(
+                onButtonClick = onButtonClick,
+                onClearClick = onClearClick,
+                allTimeCounter = allTimeCounter,
+                counter = counter
+            )
 
-            searchResult?.let { searchResult ->
-                Text(searchResult)
-            }
-
-            Button(onClick = onButtonClick) {
-                Text("Insert")
-            }
-
-            Text("All time counter: $allTimeCounter")
-
-            Text("This session's counter: $counter")
-
-            Button(onClick = onClearClick) {
-                Text("Clear")
-            }
-
-            entries.forEach { text ->
-                Text(text)
-            }
+            databaseItems(items = entries)
         }
+    }
+}
+
+private fun LazyListScope.foodsItem(
+    barcode: String,
+    onBarcodeChange: (String) -> Unit,
+    onSearchClick: () -> Unit,
+    searchResult: String?,
+) {
+    item(
+        key = "Foods",
+        contentType = "Foods"
+    ) {
+        OutlinedTextField(
+            value = barcode,
+            onValueChange = onBarcodeChange
+        )
+
+        Button(onClick = onSearchClick) {
+            Text("Search")
+        }
+
+        searchResult?.let { searchResult ->
+            Text(searchResult)
+        }
+    }
+}
+
+private fun LazyListScope.controlsItem(
+    onButtonClick: () -> Unit,
+    onClearClick: () -> Unit,
+    allTimeCounter: Int,
+    counter: Int
+) {
+    item(
+        key = "Controls",
+        contentType = "Controls"
+    ) {
+        Button(onClick = onButtonClick) {
+            Text("Insert")
+        }
+
+        Text("All time counter: $allTimeCounter")
+
+        Text("This session's counter: $counter")
+
+        Button(onClick = onClearClick) {
+            Text("Clear")
+        }
+    }
+}
+
+private fun LazyListScope.databaseItems(items: List<String>) {
+    items(
+        count = items.size,
+        key = { index -> items[index] },
+        contentType = { "DatabaseItem" }
+    ) { index ->
+        Text(items[index])
     }
 }
 
