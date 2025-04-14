@@ -19,52 +19,44 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 fun HomeRoute(
     viewModel: HomeViewModel = viewModel()
 ) {
-    val entries by viewModel.myTableEntries.collectAsStateWithLifecycle()
-    val allTimeCounter by viewModel.allTimeCounter.collectAsStateWithLifecycle()
+    val state by viewModel.viewState.collectAsStateWithLifecycle()
     HomeView(
-        barcode = viewModel.barcode,
-        onBarcodeChange = viewModel::onBarcodeChange,
-        onSearchClick = viewModel::search,
-        searchResult = viewModel.searchResult,
-        onButtonClick = viewModel::insert,
-        onClearClick = viewModel::clear,
-        entries = entries,
-        allTimeCounter = allTimeCounter,
-        counter = viewModel.counter
+        onAction = { action ->
+            when(action) {
+                is HomeAction.BarcodeChange -> viewModel.onBarcodeChange(action.barcode)
+                HomeAction.Clear -> viewModel.clear()
+                HomeAction.Insert -> viewModel.insert()
+                HomeAction.Search -> viewModel.search()
+            }
+        },
+        state = state
     )
 }
 
 @Composable
 private fun HomeView(
-    barcode: String,
-    onBarcodeChange: (String) -> Unit,
-    onSearchClick: () -> Unit,
-    searchResult: String?,
-    onButtonClick: () -> Unit,
-    onClearClick: () -> Unit,
-    entries: List<String>,
-    allTimeCounter: Int,
-    counter: Int
+    onAction: (HomeAction) -> Unit,
+    state: HomeViewState
 ) {
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         LazyColumn(
             modifier = Modifier.padding(innerPadding)
         ) {
             foodsItem(
-                barcode = barcode,
-                onBarcodeChange = onBarcodeChange,
-                onSearchClick = onSearchClick,
-                searchResult = searchResult
+                barcode = state.barcode,
+                onBarcodeChange = { onAction(HomeAction.BarcodeChange(it)) },
+                onSearchClick = { onAction(HomeAction.Search) },
+                searchResult = state.searchResult
             )
 
             controlsItem(
-                onButtonClick = onButtonClick,
-                onClearClick = onClearClick,
-                allTimeCounter = allTimeCounter,
-                counter = counter
+                onButtonClick = { onAction(HomeAction.Insert) },
+                onClearClick = { onAction(HomeAction.Clear) },
+                allTimeCounter = state.allTimeCounter,
+                counter = state.counter
             )
 
-            databaseItems(items = entries)
+            databaseItems(items = state.entries)
         }
     }
 }
@@ -132,14 +124,13 @@ private fun LazyListScope.databaseItems(items: List<String>) {
 @Composable
 private fun HomePreview() {
     HomeView(
-        barcode = "034270",
-        onBarcodeChange = {},
-        onSearchClick = {},
-        searchResult = "3824905",
-        onButtonClick = {},
-        onClearClick = {},
-        entries = listOf("Entry 1", "Entry 2"),
-        allTimeCounter = 1,
-        counter = 0
+        onAction = {},
+        state = HomeViewState(
+            barcode = "034270",
+            searchResult = "3824905",
+            entries = listOf("Entry 1", "Entry 2"),
+            allTimeCounter = 1,
+            counter = 0
+        )
     )
 }

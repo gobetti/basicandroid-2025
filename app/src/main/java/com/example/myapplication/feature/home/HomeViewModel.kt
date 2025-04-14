@@ -1,9 +1,5 @@
 package com.example.myapplication.feature.home
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
@@ -20,7 +16,9 @@ import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -34,50 +32,61 @@ class HomeViewModel @Inject constructor(
     private val httpClient: HttpClient,
     @SettingsDataStore private val settings: DataStore<Preferences>
 ) : ViewModel() {
-    var barcode by mutableStateOf("0030000436073")
-        private set
+    private val barcode = MutableStateFlow("0030000436073")
+    private val searchResult = MutableStateFlow<String?>(null)
+    private val counter = MutableStateFlow(0)
 
-    fun onBarcodeChange(text: String) {
-        barcode = text.take(13)
-    }
-
-    var searchResult by mutableStateOf<String?>(null)
-        private set
-
-    fun search() {
-        viewModelScope.launch {
-            val response = httpClient.get("https://world.openfoodfacts.org/api/v2/product/$barcode.json")
-            searchResult = response.bodyAsText()
-        }
-    }
-
-    private val myTableFlow =
+    private val entriesFlow =
         database
             .myTableQueries
             .findAll()
             .asFlow()
             .mapToList(Dispatchers.IO)
-    val myTableEntries = myTableFlow.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000),
-        initialValue = emptyList()
-    )
 
     private val allTimeCounterFlow =
         settings.data.map { preferences ->
             preferences[COUNTER_KEY] ?: 0
         }
-    val allTimeCounter = allTimeCounterFlow.stateIn(
+
+    val viewState = combine(
+        barcode,
+        searchResult,
+        entriesFlow,
+        allTimeCounterFlow,
+        counter
+    ) { barcode, searchResult, entries, allTimeCounter, counter ->
+        HomeViewState(
+            barcode = barcode,
+            searchResult = searchResult,
+            entries = entries,
+            allTimeCounter = allTimeCounter,
+            counter = counter
+        )
+    }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000),
-        initialValue = 0
+        initialValue = HomeViewState(
+            barcode = barcode.value,
+            searchResult = searchResult.value,
+            entries = emptyList(),
+            allTimeCounter = 0,
+            counter = counter.value
+        )
     )
 
-    var counter by mutableIntStateOf(0)
-        private set
+    fun onBarcodeChange(text: String) {
+        barcode.value = text.take(13)
+    }
+
+    fun search() {
+        viewModelScope.launch {
+            val response = httpClient.get("https://world.openfoodfacts.org/api/v2/product/$barcode.json")
+            searchResult.value = response.bodyAsText()
+        }
+    }
 
     fun insert() {
-        counter += 1
+        counter.value += 1
 
         viewModelScope.launch {
             settings.edit { preferences ->
@@ -98,7 +107,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun clear() {
-        counter = 0
+        counter.value = 0
 
         viewModelScope.launch {
             settings.edit { preferences ->
