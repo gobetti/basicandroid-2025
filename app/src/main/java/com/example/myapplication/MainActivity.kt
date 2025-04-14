@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import app.cash.sqldelight.driver.android.AndroidSqliteDriver
-import com.example.myapplication.feature.home.HomeView
+import com.example.myapplication.feature.home.HomeRoute
 import com.example.myapplication.ui.theme.MyApplicationTheme
 
 class MainActivity : ComponentActivity() {
@@ -26,13 +26,14 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun App() {
     MyApplicationTheme {
-        HomeView()
+        HomeRoute()
     }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun AppPreview() {
+    DI.context = LocalContext.current
     App()
 }
 
