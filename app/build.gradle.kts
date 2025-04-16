@@ -1,6 +1,6 @@
 plugins {
     id("convention.application")
-    id("convention.hilt")
+    id("convention.inject")
     alias(libs.plugins.kotlin.compose)
 }
 
@@ -41,6 +41,9 @@ android {
 }
 
 dependencies {
+    implementation(projects.core.data)
+    implementation(projects.core.di)
+    implementation(projects.core.network)
     implementation(projects.core.ui)
     implementation(projects.feature.home)
     implementation(projects.feature.mylist)
@@ -57,8 +60,8 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
 
-    implementation(libs.hilt)
-    ksp(libs.hilt.compiler)
+    implementation(libs.kotlinInject.runtime)
+    ksp(libs.kotlinInject.compiler)
 
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)

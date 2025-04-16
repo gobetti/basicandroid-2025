@@ -16,13 +16,17 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.core.di.applicationComponent
+import com.example.feature.mylist.di.MyListViewModelFactory
+import com.example.feature.mylist.di.create
 
 @Composable
 internal fun MyListRoute(
     onBackClick: () -> Unit,
     onItemClick: (String) -> Unit,
-    viewModel: MyListViewModel = hiltViewModel()
+    viewModel: MyListViewModel = viewModel(factory = MyListViewModelFactory::class.create(LocalContext.current.applicationComponent))
 ) {
     MyListView(
         onBackClick = onBackClick,

@@ -1,11 +1,12 @@
 package com.example.feature.mylist
 
 import androidx.lifecycle.ViewModel
+import com.example.core.di.ScreenScope
 import com.example.feature.mylist.sources.MyListDatabaseSource
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
+import me.tatarka.inject.annotations.Inject
 
-@HiltViewModel
-internal class MyListViewModel @Inject constructor(
+@ScreenScope
+@Inject
+internal class MyListViewModel(
     val databaseSource: MyListDatabaseSource
 ) : ViewModel()

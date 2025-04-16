@@ -6,14 +6,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.example.core.data.Database
 import com.example.core.data.ProductData
+import com.example.core.di.ScreenScope
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
+import me.tatarka.inject.annotations.Inject
 
-class HomeSearchSource @Inject constructor(
+@ScreenScope
+@Inject
+class HomeSearchSource(
     private val barcodeSource: HomeBarcodeSource,
     private val database: Database,
     private val httpClient: HttpClient

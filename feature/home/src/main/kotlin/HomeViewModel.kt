@@ -3,16 +3,17 @@ package com.example.feature.home
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.core.di.ScreenScope
 import com.example.feature.home.sources.HomeBarcodeSource
 import com.example.feature.home.sources.HomePersistentCounterSource
 import com.example.feature.home.sources.HomeSearchSource
 import com.example.feature.home.sources.HomeTransientCounterSource
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import me.tatarka.inject.annotations.Inject
 
-@HiltViewModel
-internal class HomeViewModel @Inject constructor(
+@ScreenScope
+@Inject
+internal class HomeViewModel(
     val barcodeSource: HomeBarcodeSource,
     val persistentCounterSource: HomePersistentCounterSource,
     val searchSource: HomeSearchSource,

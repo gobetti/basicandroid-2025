@@ -7,17 +7,17 @@ import androidx.navigation.toRoute
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToOne
 import com.example.core.data.Database
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.serialization.json.jsonPrimitive
-import javax.inject.Inject
+import me.tatarka.inject.annotations.Assisted
+import me.tatarka.inject.annotations.Inject
 
-@HiltViewModel
-internal class ProductViewModel @Inject constructor(
+@Inject
+internal class ProductViewModel(
     database: Database,
-    savedStateHandle: SavedStateHandle
+    @Assisted savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val barcode = savedStateHandle.toRoute<Product>().barcode
 

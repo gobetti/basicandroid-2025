@@ -7,11 +7,14 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.core.di.SettingsDataStore
+import com.example.core.data.di.SettingsDataStore
+import com.example.core.di.ScreenScope
 import kotlinx.coroutines.flow.map
-import javax.inject.Inject
+import me.tatarka.inject.annotations.Inject
 
-class HomePersistentCounterSource @Inject constructor(
+@ScreenScope
+@Inject
+class HomePersistentCounterSource(
     @SettingsDataStore private val settings: DataStore<Preferences>
 ) {
     private val flow =

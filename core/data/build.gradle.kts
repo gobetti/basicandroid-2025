@@ -1,6 +1,5 @@
 plugins {
-    id("convention.library")
-    id("convention.hilt")
+    id("convention.library-inject")
     id("convention.serialization")
     alias(libs.plugins.sqldelight)
 }
@@ -20,9 +19,6 @@ android {
 
 dependencies {
     implementation(libs.androidx.datastore)
-
-    implementation(libs.hilt)
-    ksp(libs.hilt.compiler)
 
     implementation(libs.kotlinx.serialization)
 

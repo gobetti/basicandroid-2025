@@ -4,9 +4,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.setValue
-import javax.inject.Inject
+import com.example.core.di.ScreenScope
+import me.tatarka.inject.annotations.Inject
 
-class HomeTransientCounterSource @Inject constructor() {
+@ScreenScope
+@Inject
+class HomeTransientCounterSource {
     private var counter by mutableIntStateOf(0)
 
     @Composable

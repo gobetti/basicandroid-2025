@@ -6,10 +6,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import com.example.core.data.Database
+import com.example.core.di.ScreenScope
 import kotlinx.coroutines.Dispatchers
-import javax.inject.Inject
+import me.tatarka.inject.annotations.Inject
 
-class MyListDatabaseSource @Inject constructor(
+@ScreenScope
+@Inject
+class MyListDatabaseSource(
     database: Database
 ) {
     private val flow =
