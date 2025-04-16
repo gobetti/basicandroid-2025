@@ -1,6 +1,5 @@
 plugins {
-    id("convention.library")
-    id("convention.hilt")
+    id("convention.library-inject")
 }
 
 android {
@@ -8,9 +7,6 @@ android {
 }
 
 dependencies {
-    implementation(libs.hilt)
-    ksp(libs.hilt.compiler)
-
     implementation(libs.ktor.client.content.negotiation)
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.okhttp)

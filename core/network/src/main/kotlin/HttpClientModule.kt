@@ -1,17 +1,19 @@
 package com.example.core.network
 
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
+import me.tatarka.inject.annotations.Component
+import me.tatarka.inject.annotations.Provides
+import me.tatarka.inject.annotations.Scope
 
-@Module
-@InstallIn(SingletonComponent::class)
-object HttpClientModule {
+@Scope
+annotation class NetworkScope
+
+@NetworkScope
+@Component
+abstract class NetworkComponent {
     @Provides
     fun provideHttpClient(json: Json): HttpClient = HttpClient {
         install(ContentNegotiation) {
