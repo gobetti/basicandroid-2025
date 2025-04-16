@@ -5,21 +5,23 @@ import app.cash.sqldelight.ColumnAdapter
 import app.cash.sqldelight.driver.android.AndroidSqliteDriver
 import com.example.core.data.Database
 import com.example.myapplication.Product
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonObject
+import me.tatarka.inject.annotations.Component
+import me.tatarka.inject.annotations.Provides
+import me.tatarka.inject.annotations.Scope
 
-@Module
-@InstallIn(SingletonComponent::class)
-object DatabaseModule {
+@Scope
+annotation class DatabaseScope
+
+@Component
+abstract class DatabaseComponent(
+    private val context: Context,
+    @Component val jsonObjectAdapterComponent: JsonObjectAdapterComponent
+) {
     @Provides
     fun provideDatabase(
-        @ApplicationContext context: Context,
         jsonObjectAdapter: ColumnAdapter<JsonObject, String>
     ): Database = Database(
         AndroidSqliteDriver(Database.Schema, context, "test.db"),
@@ -29,9 +31,11 @@ object DatabaseModule {
     )
 }
 
-@Module
-@InstallIn(SingletonComponent::class)
-object JsonObjectAdapterModule {
+@DatabaseScope
+@Component
+abstract class JsonObjectAdapterComponent(
+    @Component val jsonComponent: JsonComponent
+) {
     @Provides
     fun provideJsonObjectAdapter(json: Json) = object : ColumnAdapter<JsonObject, String> {
         override fun decode(databaseValue: String) = json.parseToJsonElement(databaseValue).jsonObject

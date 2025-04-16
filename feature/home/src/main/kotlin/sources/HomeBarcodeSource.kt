@@ -4,22 +4,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ViewModelComponent
-import dagger.hilt.android.scopes.ViewModelScoped
-import javax.inject.Inject
+import com.example.feature.home.di.HomeViewScope
+import me.tatarka.inject.annotations.Component
+import me.tatarka.inject.annotations.Inject
+import me.tatarka.inject.annotations.Provides
 
-@Module
-@InstallIn(ViewModelComponent::class)
-object HomeBarcodeSourceModule {
+@HomeViewScope
+@Component
+abstract class HomeBarcodeSourceModule {
+    @HomeViewScope
     @Provides
-    @ViewModelScoped
     fun provideBarcodeSource(): HomeBarcodeSource = HomeBarcodeSource()
 }
 
-class HomeBarcodeSource @Inject constructor() {
+@HomeViewScope
+@Inject
+class HomeBarcodeSource {
     private var barcode by mutableStateOf("0030000436073")
 
     val value get() = barcode

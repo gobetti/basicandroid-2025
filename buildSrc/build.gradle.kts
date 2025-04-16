@@ -4,7 +4,6 @@ plugins {
 
 dependencies {
     implementation(libs.com.android.tools.build.gradle)
-    implementation(libs.com.google.dagger.hilt.android.gradle.plugin)
     implementation(libs.com.google.devtools.ksp.gradle.plugin)
     implementation(libs.org.jetbrains.kotlin.android.gradle.plugin)
     implementation(libs.org.jetbrains.kotlin.serialization.plugin)
