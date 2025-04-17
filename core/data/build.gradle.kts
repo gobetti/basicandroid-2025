@@ -1,6 +1,7 @@
 plugins {
     id("convention.library-inject")
     id("convention.serialization")
+    id("kotlin-parcelize")
     alias(libs.plugins.sqldelight)
 }
 

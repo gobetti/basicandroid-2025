@@ -29,7 +29,7 @@ internal class HomeCompositor(
 
     override suspend fun onIntent(intent: Intent) {
         when(intent) {
-            is HomeAction.BarcodeChange -> barcodeSource.onBarcodeChange(intent.barcode)
+            is HomeAction.BarcodeChange -> barcodeSource.onBarcodeChange(intent.textFieldValue)
             HomeAction.OpenList -> {
                 count()
                 onGoToListClick()

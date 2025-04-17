@@ -14,6 +14,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.core.data.ProductData
 import kotlinx.serialization.json.JsonObject
@@ -51,8 +52,8 @@ internal fun HomeView(
 
 @Composable
 private fun ColumnScope.Foods(
-    barcode: String,
-    onBarcodeChange: (String) -> Unit,
+    barcode: TextFieldValue,
+    onBarcodeChange: (TextFieldValue) -> Unit,
     onSearchClick: () -> Unit,
     onSearchResultClick: (ProductData) -> Unit,
     searchResult: ProductData?
@@ -107,7 +108,7 @@ private fun HomePreview() {
         onAction = {},
         state = HomeViewState(
             isLoading = false,
-            barcode = "034270",
+            barcode = TextFieldValue("034270"),
             searchResult = ProductData(
                 code = "3824905",
                 productJson = JsonObject(emptyMap())
