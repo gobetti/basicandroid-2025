@@ -14,41 +14,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.core.data.ProductData
-import com.example.core.di.applicationComponent
-import com.example.feature.home.di.HomeViewModelFactory
-import com.example.feature.home.di.create
 import kotlinx.serialization.json.JsonObject
 
 @Composable
-internal fun HomeRoute(
-    onGoToListClick: () -> Unit,
-    onSearchResultClick: (String) -> Unit,
-    viewModel: HomeViewModel = viewModel(factory = HomeViewModelFactory::class.create(LocalContext.current.applicationComponent))
-) {
-    val state = viewModel.viewState()
-    HomeView(
-        onAction = { action ->
-            when(action) {
-                is HomeAction.BarcodeChange -> viewModel.barcodeSource.onBarcodeChange(action.barcode)
-                HomeAction.OpenList -> {
-                    viewModel.count()
-                    onGoToListClick()
-                }
-                is HomeAction.OpenProduct -> onSearchResultClick(action.product.code)
-                HomeAction.Reset -> viewModel.reset()
-                HomeAction.Search -> viewModel.search()
-            }
-        },
-        state = state
-    )
-}
-
-@Composable
-private fun HomeView(
+internal fun HomeView(
     onAction: (HomeAction) -> Unit,
     state: HomeViewState
 ) {
