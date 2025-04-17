@@ -1,5 +1,5 @@
 plugins {
-    id("convention.library-compose")
+    id("convention.library-compose-screen")
     id("convention.library-inject")
     alias(libs.plugins.kotlin.compose)
 }
@@ -19,7 +19,4 @@ dependencies {
 
     implementation(libs.sqldelight)
     implementation(libs.sqldelight.coroutines)
-
-    implementation(libs.vice.core)
-    implementation(libs.vice.nav)
 }

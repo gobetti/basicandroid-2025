@@ -31,6 +31,7 @@ fun App() {
             )
 
             myListScreen(
+                applicationComponent = applicationComponent,
                 onBackClick = navController::popBackStack,
                 onItemClick = navController::navigateToProduct
             )
