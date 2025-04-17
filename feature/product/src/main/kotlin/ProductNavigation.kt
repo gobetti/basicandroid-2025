@@ -2,7 +2,10 @@ package com.example.feature.product
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.compose.composable
+import com.example.core.di.ApplicationComponent
+import com.example.feature.product.di.ProductDestinationComponent
+import com.example.feature.product.di.create
+import com.eygraber.vice.nav.viceComposable
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -12,11 +15,13 @@ fun NavController.navigateToProduct(barcode: String) =
     navigate(route = Product(barcode = barcode))
 
 fun NavGraphBuilder.productScreen(
+    applicationComponent: ApplicationComponent,
     onBackClick: () -> Unit
 ) {
-    composable<Product> {
-        ProductRoute(
-            onBackClick = onBackClick
+    viceComposable<Product> { backStackEntry ->
+        ProductDestinationComponent::class.create(applicationComponent).factory(
+            backStackEntry.route.barcode,
+            onBackClick
         )
     }
 }
