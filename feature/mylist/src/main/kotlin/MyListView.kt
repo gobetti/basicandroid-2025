@@ -16,31 +16,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.core.di.applicationComponent
-import com.example.feature.mylist.di.MyListViewModelFactory
-import com.example.feature.mylist.di.create
-
-@Composable
-internal fun MyListRoute(
-    onBackClick: () -> Unit,
-    onItemClick: (String) -> Unit,
-    viewModel: MyListViewModel = viewModel(factory = MyListViewModelFactory::class.create(LocalContext.current.applicationComponent))
-) {
-    MyListView(
-        onBackClick = onBackClick,
-        onItemClick = onItemClick,
-        items = viewModel.databaseSource.currentState()
-    )
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun MyListView(
-    onBackClick: () -> Unit,
-    onItemClick: (String) -> Unit,
-    items: List<String>
+internal fun MyListView(
+    onIntent: (Intent) -> Unit,
+    state: State
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -48,7 +29,7 @@ private fun MyListView(
             TopAppBar(
                 title = { Text("My List") },
                 navigationIcon = {
-                    IconButton(onClick = onBackClick) {
+                    IconButton(onClick = { onIntent(MyListIntent.Back) }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back"
@@ -62,8 +43,8 @@ private fun MyListView(
             modifier = Modifier.padding(innerPadding)
         ) {
             databaseItems(
-                onItemClick = onItemClick,
-                items = items
+                onItemClick = { onIntent(MyListIntent.OpenItem(it)) },
+                items = state.items
             )
         }
     }
