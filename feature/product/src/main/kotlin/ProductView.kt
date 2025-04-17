@@ -13,40 +13,21 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.core.di.applicationComponent
-import com.example.feature.product.di.ProductViewModelFactory
-import com.example.feature.product.di.create
-
-@Composable
-internal fun ProductRoute(
-    onBackClick: () -> Unit,
-    viewModel: ProductViewModel = viewModel(factory = ProductViewModelFactory::class.create(LocalContext.current.applicationComponent))
-) {
-    val product by viewModel.product.collectAsStateWithLifecycle()
-    ProductView(
-        onBackClick = onBackClick,
-        product = product
-    )
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun ProductView(
-    onBackClick: () -> Unit,
-    product: ProductViewModel.DisplayableProduct
+internal fun ProductView(
+    onIntent: (Intent) -> Unit,
+    state: State
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
-                title = { Text(product.barcode) },
+                title = { Text(state.barcode) },
                 navigationIcon = {
-                    IconButton(onClick = onBackClick) {
+                    IconButton(onClick = { onIntent(ProductIntent.Back) }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back"
@@ -60,7 +41,7 @@ private fun ProductView(
             modifier = Modifier.padding(innerPadding)
         ) {
             Text(
-                text = product.name,
+                text = state.name,
                 style = MaterialTheme.typography.titleLarge
             )
         }
