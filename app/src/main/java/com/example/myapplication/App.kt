@@ -37,6 +37,7 @@ fun App() {
             )
 
             productScreen(
+                applicationComponent = applicationComponent,
                 onBackClick = navController::popBackStack
             )
         }

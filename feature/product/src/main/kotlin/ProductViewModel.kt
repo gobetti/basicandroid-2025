@@ -1,31 +1,27 @@
 package com.example.feature.product
 
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import androidx.navigation.toRoute
+import androidx.compose.runtime.Composable
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToOne
 import com.example.core.data.Database
+import com.eygraber.vice.ViceCompositor
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.serialization.json.jsonPrimitive
 import me.tatarka.inject.annotations.Assisted
 import me.tatarka.inject.annotations.Inject
 
 @Inject
-internal class ProductViewModel(
+internal class ProductCompositor(
     database: Database,
-    @Assisted savedStateHandle: SavedStateHandle
-) : ViewModel() {
-    private val barcode = savedStateHandle.toRoute<Product>().barcode
-
+    @Assisted private val barcode: String,
+    @Assisted private val onBackClick: () -> Unit
+) : ViceCompositor<Intent, State> {
     private val productFlow =
         database
             .productQueries
             .find(whereBarcode = barcode) { barcode, productJson ->
-                DisplayableProduct(
+                ProductViewState(
                     barcode = barcode,
                     name = productJson["product_name"]?.jsonPrimitive?.content ?: "Name unavailable"
                 )
@@ -33,19 +29,20 @@ internal class ProductViewModel(
             .asFlow()
             .mapToOne(Dispatchers.IO)
 
-    val product =
-        productFlow
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000L),
-                initialValue = DisplayableProduct(
-                    barcode = barcode,
-                    name = ""
-                )
+    @Composable
+    override fun composite(): State {
+        val product = productFlow.collectAsStateWithLifecycle(
+            initialValue = State(
+                barcode = barcode,
+                name = ""
             )
+        )
+        return product.value
+    }
 
-    data class DisplayableProduct(
-        val barcode: String,
-        val name: String
-    )
+    override suspend fun onIntent(intent: Intent) {
+        when(intent) {
+            ProductIntent.Back -> onBackClick()
+        }
+    }
 }
