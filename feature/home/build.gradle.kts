@@ -19,4 +19,7 @@ dependencies {
 
     implementation(libs.sqldelight)
     implementation(libs.sqldelight.coroutines)
+
+    implementation(libs.vice.core)
+    implementation(libs.vice.nav)
 }

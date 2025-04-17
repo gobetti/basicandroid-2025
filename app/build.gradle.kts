@@ -63,6 +63,8 @@ dependencies {
     implementation(libs.kotlinInject.runtime)
     ksp(libs.kotlinInject.compiler)
 
+    implementation(libs.vice.nav)
+
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 }
