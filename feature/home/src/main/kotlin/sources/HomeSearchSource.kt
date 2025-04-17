@@ -1,9 +1,8 @@
 package com.example.feature.home.sources
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.saveable.rememberSaveable
 import com.example.core.data.Database
 import com.example.core.data.ProductData
 import com.example.core.di.ScreenScope
@@ -21,29 +20,29 @@ class HomeSearchSource(
     private val database: Database,
     private val httpClient: HttpClient
 ) {
-    private var result by mutableStateOf<ProductData?>(null)
-    private var isLoading by mutableStateOf(false)
+    private val result = mutableStateOf<ProductData?>(null)
+    private var isLoading = mutableStateOf(false)
 
     @Composable
-    fun currentState() = result
+    fun currentState() = rememberSaveable(result) { result }.value
 
     @Composable
-    fun isLoading() = isLoading
+    fun isLoading() = rememberSaveable { isLoading }.value
 
     suspend operator fun invoke() {
-        isLoading = true
+        isLoading.value = true
 
         try {
-            val response = httpClient.get("https://world.openfoodfacts.org/api/v2/product/${barcodeSource.value}.json")
+            val response = httpClient.get("https://world.openfoodfacts.org/api/v2/product/${barcodeSource.barcode}.json")
             val productData: ProductData = response.body()
-            result = productData
+            result.value = productData
             upsert(productData = productData)
         }
         catch (_: Throwable) {
-            result = null
+            result.value = null
         }
         finally {
-            isLoading = false
+            isLoading.value = false
         }
     }
 

@@ -1,25 +1,24 @@
 package com.example.feature.home.sources
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.saveable.rememberSaveable
 import com.example.core.di.ScreenScope
 import me.tatarka.inject.annotations.Inject
 
 @ScreenScope
 @Inject
 class HomeTransientCounterSource {
-    private var counter by mutableIntStateOf(0)
+    private var counter = mutableIntStateOf(0)
 
     @Composable
-    fun currentState() = counter
+    fun currentState() = rememberSaveable { counter }.intValue
 
     fun increment() {
-        counter += 1
+        counter.intValue += 1
     }
 
     fun reset() {
-        counter = 0
+        counter.intValue = 0
     }
 }
