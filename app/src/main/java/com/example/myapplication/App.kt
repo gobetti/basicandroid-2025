@@ -26,7 +26,8 @@ fun App() {
             )
 
             myListScreen(
-                onBackClick = navController::popBackStack
+                onBackClick = navController::popBackStack,
+                onItemClick = navController::navigateToProduct
             )
 
             productScreen(

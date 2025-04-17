@@ -4,14 +4,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import com.example.myapplication.Database
 import com.example.myapplication.data.ProductData
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class HomeSearchSource @Inject constructor(
     private val barcodeSource: HomeBarcodeSource,
+    private val database: Database,
     private val httpClient: HttpClient
 ) {
     private var result by mutableStateOf<ProductData?>(null)
@@ -26,9 +30,28 @@ class HomeSearchSource @Inject constructor(
     suspend operator fun invoke() {
         isLoading = true
 
-        val response = httpClient.get("https://world.openfoodfacts.org/api/v2/product/${barcodeSource.value}.json")
-        result = response.body()
+        try {
+            val response = httpClient.get("https://world.openfoodfacts.org/api/v2/product/${barcodeSource.value}.json")
+            val productData: ProductData = response.body()
+            result = productData
+            upsert(productData = productData)
+        }
+        catch (_: Throwable) {
+            result = null
+        }
+        finally {
+            isLoading = false
+        }
+    }
 
-        isLoading = false
+    private suspend fun upsert(productData: ProductData) = withContext(Dispatchers.IO) {
+        database.transaction {
+            with(productData) {
+                database.productQueries.upsert(
+                    barcode = code,
+                    productJson = productJson
+                )
+            }
+        }
     }
 }

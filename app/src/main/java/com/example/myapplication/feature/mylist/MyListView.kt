@@ -1,15 +1,16 @@
 package com.example.myapplication.feature.mylist
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -21,12 +22,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 @Composable
 fun MyListRoute(
     onBackClick: () -> Unit,
+    onItemClick: (String) -> Unit,
     viewModel: MyListViewModel = hiltViewModel()
 ) {
     MyListView(
         onBackClick = onBackClick,
-        onInsert = viewModel::insert,
-        onClear = viewModel::clear,
+        onItemClick = onItemClick,
         items = viewModel.databaseSource.currentState()
     )
 }
@@ -35,8 +36,7 @@ fun MyListRoute(
 @Composable
 fun MyListView(
     onBackClick: () -> Unit,
-    onInsert: () -> Unit,
-    onClear: () -> Unit,
+    onItemClick: (String) -> Unit,
     items: List<String>
 ) {
     Scaffold(
@@ -58,40 +58,29 @@ fun MyListView(
         LazyColumn(
             modifier = Modifier.padding(innerPadding)
         ) {
-            controlsItem(
-                onInsert = onInsert,
-                onClear = onClear
+            databaseItems(
+                onItemClick = onItemClick,
+                items = items
             )
-
-            databaseItems(items = items)
         }
     }
 }
 
-private fun LazyListScope.controlsItem(
-    onInsert: () -> Unit,
-    onClear: () -> Unit
+private fun LazyListScope.databaseItems(
+    onItemClick: (String) -> Unit,
+    items: List<String>
 ) {
-    item(
-        key = "Controls",
-        contentType = "Controls"
-    ) {
-        Button(onClick = onInsert) {
-            Text("Insert")
-        }
-
-        Button(onClick = onClear) {
-            Text("Clear")
-        }
-    }
-}
-
-private fun LazyListScope.databaseItems(items: List<String>) {
     items(
         count = items.size,
         key = { index -> items[index] },
         contentType = { "DatabaseItem" }
     ) { index ->
-        Text(items[index])
+        val item = items[index]
+        ListItem(
+            headlineContent = {
+                Text(item)
+            },
+            modifier = Modifier.clickable(onClick = { onItemClick(item) })
+        )
     }
 }

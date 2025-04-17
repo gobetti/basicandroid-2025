@@ -12,11 +12,13 @@ fun NavController.navigateToMyList() =
     navigate(route = MyList)
 
 fun NavGraphBuilder.myListScreen(
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    onItemClick: (String) -> Unit,
 ) {
     composable<MyList> {
         MyListRoute(
-            onBackClick = onBackClick
+            onBackClick = onBackClick,
+            onItemClick = onItemClick
         )
     }
 }

@@ -22,7 +22,7 @@ import kotlinx.serialization.json.JsonObject
 @Composable
 fun HomeRoute(
     onGoToListClick: () -> Unit,
-    onSearchResultClick: (ProductData) -> Unit,
+    onSearchResultClick: (String) -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val state = viewModel.viewState()
@@ -34,7 +34,7 @@ fun HomeRoute(
                     viewModel.count()
                     onGoToListClick()
                 }
-                is HomeAction.OpenProduct -> onSearchResultClick(action.product)
+                is HomeAction.OpenProduct -> onSearchResultClick(action.product.code)
                 HomeAction.Reset -> viewModel.reset()
                 HomeAction.Search -> viewModel.search()
             }

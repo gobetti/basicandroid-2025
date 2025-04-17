@@ -13,19 +13,20 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.myapplication.data.ProductData
-import kotlinx.serialization.json.jsonPrimitive
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @Composable
 fun ProductRoute(
     onBackClick: () -> Unit,
     viewModel: ProductViewModel = hiltViewModel()
 ) {
+    val product by viewModel.product.collectAsStateWithLifecycle()
     ProductView(
         onBackClick = onBackClick,
-        productData = viewModel.productData
+        product = product
     )
 }
 
@@ -33,13 +34,13 @@ fun ProductRoute(
 @Composable
 private fun ProductView(
     onBackClick: () -> Unit,
-    productData: ProductData
+    product: ProductViewModel.DisplayableProduct
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
-                title = { Text(productData.code) },
+                title = { Text(product.barcode) },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(
@@ -55,7 +56,7 @@ private fun ProductView(
             modifier = Modifier.padding(innerPadding)
         ) {
             Text(
-                text = productData.productJson["product_name"]?.jsonPrimitive?.content ?: "Name unavailable",
+                text = product.name,
                 style = MaterialTheme.typography.titleLarge
             )
         }
