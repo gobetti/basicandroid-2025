@@ -20,9 +20,9 @@ fun NavGraphBuilder.myListScreen(
     onItemClick: (String) -> Unit,
 ) {
     viceComposable<MyList> {
-        MyListDestinationComponent::class.create(applicationComponent).factory(
-            onBackClick,
-            onItemClick
+        MyListDestinationComponent::class.create(applicationComponent).build(
+            onBackClick = onBackClick,
+            onItemClick = onItemClick
         )
     }
 }
