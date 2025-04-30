@@ -19,9 +19,9 @@ fun NavGraphBuilder.productScreen(
     onBackClick: () -> Unit
 ) {
     viceComposable<Product> { backStackEntry ->
-        ProductDestinationComponent::class.create(applicationComponent).factory(
-            backStackEntry.route.barcode,
-            onBackClick
+        ProductDestinationComponent::class.create(applicationComponent).build(
+            barcode = backStackEntry.route.barcode,
+            onBackClick = onBackClick
         )
     }
 }

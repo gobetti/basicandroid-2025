@@ -16,9 +16,9 @@ fun NavGraphBuilder.homeScreen(
     onSearchResultClick: (String) -> Unit
 ) {
     viceComposable<Home> {
-        HomeDestinationComponent::class.create(applicationComponent).factory(
-            onGoToListClick,
-            onSearchResultClick
+        HomeDestinationComponent::class.create(applicationComponent).build(
+            onGoToListClick = onGoToListClick,
+            onSearchResultClick = onSearchResultClick
         )
     }
 }
