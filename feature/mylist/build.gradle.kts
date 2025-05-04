@@ -11,6 +11,7 @@ android {
 dependencies {
     implementation(projects.core.data)
     implementation(projects.core.di)
+    implementation(projects.core.network) // this is only here to access ApplicationComponent...
 
     implementation(libs.sqldelight)
     implementation(libs.sqldelight.coroutines)

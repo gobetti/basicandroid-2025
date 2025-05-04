@@ -4,13 +4,9 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
-import me.tatarka.inject.annotations.Component
+import com.example.core.base.ApplicationScope
 import me.tatarka.inject.annotations.Provides
 import me.tatarka.inject.annotations.Qualifier
-import me.tatarka.inject.annotations.Scope
-
-@Scope
-annotation class DataStoreScope
 
 @Qualifier
 @Target(
@@ -30,17 +26,16 @@ annotation class SettingsDataStore
 )
 annotation class UserPreferencesDataStore
 
-@DataStoreScope
-@Component
-abstract class DataStoreComponent(
-    private val context: Context
-) {
+interface DataStoreComponent {
+    // convenience so we don't need to add context as a parameter to every method
+    @get:Provides val context: Context
+
     @SettingsDataStore
-    @Provides
+    @Provides @ApplicationScope
     fun provideSettings(): DataStore<Preferences> = context.settings
 
     @UserPreferencesDataStore
-    @Provides
+    @Provides @ApplicationScope
     fun provideUserPreferences(): DataStore<Preferences> = context.userPreferences
 }
 

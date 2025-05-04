@@ -19,6 +19,8 @@ android {
 }
 
 dependencies {
+    implementation(projects.core.base)
+
     implementation(libs.androidx.datastore)
 
     implementation(libs.kotlinx.serialization)
