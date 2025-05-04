@@ -41,9 +41,7 @@ android {
 }
 
 dependencies {
-    implementation(projects.core.data)
     implementation(projects.core.di)
-    implementation(projects.core.network)
     implementation(projects.core.ui)
     implementation(projects.feature.home)
     implementation(projects.feature.mylist)

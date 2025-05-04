@@ -23,6 +23,7 @@ rootProject.name = "MyApplication"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 include(":app")
+include(":core:base")
 include(":core:data")
 include(":core:di")
 include(":core:network")

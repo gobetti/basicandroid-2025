@@ -7,6 +7,8 @@ android {
 }
 
 dependencies {
+    implementation(projects.core.base)
+
     implementation(libs.ktor.client.content.negotiation)
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.okhttp)
